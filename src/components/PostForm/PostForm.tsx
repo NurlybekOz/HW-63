@@ -24,6 +24,8 @@ const PostForm: React.FC<Props> = ({isEdit = false, onSubmitAction, idPost}) => 
     const [loading, setLoading] = useState(false);
 
     const fetchOnePost = useCallback(async () => {
+        if (!idPost) return;
+
         try {
             setLoading(true)
             const response = await axiosApi<IPostForm>(`posts/${idPost}.json`);
@@ -47,6 +49,10 @@ const PostForm: React.FC<Props> = ({isEdit = false, onSubmitAction, idPost}) => 
 
     const onSubmit = (e: FormEvent) => {
         e.preventDefault()
+        if (!form.title || !form.description) {
+            toast.error('title/description cannot be empty');
+            return;
+        }
         onSubmitAction({...form})
     }
     const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
